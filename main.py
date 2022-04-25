@@ -1,16 +1,47 @@
-# This is a sample Python script.
+import hashlib
+import pandas as pd
 
-# Press F5 to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+def hashUsingTuplesFirst() -> []:
+    hashes = []
+    file = open("title.basics.mod.tsv")
+
+    for row in file:
+        columns = row.split()
+        hash_string = str(tuple(columns))
+        hashes.append(hashlib.md5(hash_string.encode("utf-8")).hexdigest())
+
+    file.close()
+    return hashes
+
+def hashWithoutTuple() -> []:
+    hashes = []
+    file = open("title.basics.mod.tsv")
+
+    for row in file:
+        columns = row.split()
+        hash_string = "(" + ", ".join(f"'{str(column)}'" for column in columns) + ")"
+        hashes.append(hashlib.md5(hash_string.encode("utf-8")).hexdigest())
+
+    file.close()
+    return hashes
+
+def hashUsingPandas() -> []:
+    hashes = []
+    file = open("title.basics.mod.tsv")
+    df = pd.read_csv(file, sep='\t')
+
+    for row in df:
+        hash_string = str(row)
+        hashes.append(hashlib.md5(hash_string.encode("utf-8")).hexdigest())
+
+    file.close()
+    return hashes
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+hashUsingTuplesFirst()
+hashWithoutTuple()
+hashUsingPandas()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
